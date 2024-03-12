@@ -11,9 +11,18 @@ const Content = (props) => {
   console.log('Hello from Content component.')
   return (
     <div>
-      <p>{props.part1} {props.exercises1}</p>
-      <p>{props.part2} {props.exercises2}</p>
-      <p>{props.part3} {props.exercises3}</p>
+      <Part part={props.part1} exercise={props.exercises1}></Part>
+      <Part part={props.part2} exercise={props.exercises2}></Part>
+      <Part part={props.part3} exercise={props.exercises3}></Part>
+    </div>
+  )
+}
+
+const Part = (props) => {
+  console.log('Hello from Part component.')
+  return (
+    <div>
+      <p>{props.part} {props.exercise}</p>
     </div>
   )
 }
