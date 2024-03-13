@@ -11,9 +11,9 @@ const Content = (props) => {
   console.log('Content component: ', props)
   return (
     <div>
-      <Part name={props.part1.name} exercises={props.part1.exercises}></Part>
-      <Part name={props.part2.name} exercises={props.part2.exercises}></Part>
-      <Part name={props.part3.name} exercises={props.part3.exercises}></Part>
+      <Part name={props.parts[0].name} exercises={props.parts[0].exercises}></Part>
+      <Part name={props.parts[1].name} exercises={props.parts[1].exercises}></Part>
+      <Part name={props.parts[2].name} exercises={props.parts[2].exercises}></Part>
     </div>
   )
 }
@@ -31,7 +31,7 @@ const Total = (props) => {
   console.log('Total component: ', props)
   return(
     <div>
-      <p>{props.message} {props.total}</p>
+      <p>{props.message} {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
     </div>
   )
 }
@@ -57,8 +57,8 @@ const App = () => {
   return (
     <div>
       <Header course={course}></Header>
-      <Content part1={parts[0]} part2={parts[1]} part3={parts[2]}></Content>
-      <Total message='Total exercises: ' total={parts[0].exercises + parts[1].exercises + parts[2].exercises}></Total>
+      <Content parts={parts}></Content>
+      <Total message='Total exercises: ' parts={parts}></Total>
     </div>
   )
 }
