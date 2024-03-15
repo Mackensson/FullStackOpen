@@ -1,67 +1,71 @@
-const Header = (props) => {
-  console.log('Header component: ', props)
-  return (
-    <div>
-      <h1>{props.course}</h1>
-    </div>
-  )
-}
+import { useState } from 'react'
 
-const Content = (props) => {
-  console.log('Content component: ', props)
-  return (
-    <div>
-      <Part name={props.parts[0].name} exercises={props.parts[0].exercises}></Part>
-      <Part name={props.parts[1].name} exercises={props.parts[1].exercises}></Part>
-      <Part name={props.parts[2].name} exercises={props.parts[2].exercises}></Part>
-    </div>
-  )
-}
 
-const Part = (props) => {
-  console.log('Part component: ', props)
-  return (
-    <div>
-      <p>{props.name} {props.exercises}</p>
-    </div>
-  )
-}
-
-const Total = (props) => {
-  console.log('Total component: ', props)
+//Components
+const Header = ({name}) => {
+  console.log("Header comp:", name)
   return(
     <div>
-      <p>{props.message} {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
+      <h1>{name}</h1>
     </div>
   )
 }
 
+const Button = ({text, onClick}) => {
+  console.log("Button comp:", text, onClick)
+  return(
+    <button onClick={onClick}>
+      {text}
+    </button>
+  )
+}
+
+const Content = ({text, total}) => {
+  return(
+    <div>
+      <Paragraph text={text} total={total}></Paragraph>
+    </div>
+  )
+}
+
+const Paragraph = ({text, total}) => {
+  console.log("Paragraph comp:", text, total)
+  return(
+    <div>
+      <p>{text} {total}</p>
+    </div>
+  )
+}
 
 const App = () => {
-  console.log('App Init..')
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React:',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data:',
-        exercises: 7
-      },
-      {
-        name: 'State of a component:',
-        exercises: 14
-      }
-    ]
-  }
-  
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+
+//EventListeners
+const incrementGood = () => {
+  setGood(good + 1)
+}
+
+const incrementNeutral = () => {
+  setNeutral(neutral + 1)
+}
+
+const incrementBad = () => {
+  setBad(bad + 1)
+}
+
   return (
     <div>
-      <Header course={course.name}></Header>
-      <Content parts={course.parts}></Content>
-      <Total message='Total exercises: ' parts={course.parts}></Total>
+      <Header name="give feedback" />
+      <Button text="good" onClick={incrementGood}></Button>
+      <Button text="neutral" onClick={incrementNeutral}></Button>
+      <Button text="bad" onClick={incrementBad}></Button>
+      <Header name="statistics"></Header>
+      <Content text="good" total={good}></Content>
+      <Content text="neutral" total={neutral}></Content>
+      <Content text="bad" total={bad}></Content>
     </div>
   )
 }
