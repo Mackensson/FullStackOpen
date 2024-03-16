@@ -5,10 +5,15 @@ import { useState } from 'react'
 const Button = ({text, onClick}) => {
   console.log("Button comp:", text, onClick)
   return(
-  <div>
     <button onClick={onClick}>{text}</button>
-  </div>
   )}
+
+const AnecdoteInfo = ({amount}) => {
+  console.log("AnecdoteInfo comp:", amount)
+  return(
+    <p>has {amount} votes</p>
+  )
+}
 
 const App = () => {
   const anecdotes = [
@@ -22,6 +27,9 @@ const App = () => {
     'The only way to go fast, is to go well.'
   ]
 
+  const initialPoints = new Array(anecdotes.length).fill(0)
+
+  const [points, setPoints] = useState(initialPoints)
   const [selected, setSelected] = useState(0)
 
   const generateAnecdote = () => {
@@ -32,10 +40,20 @@ const App = () => {
     setSelected(randomIndex)
   }
 
+  const incrementVote = () => {
+    const newPoints = [...points]
+    newPoints[selected] += 1
+    setPoints(newPoints)
+  }
+
   return (
     <div>
       {anecdotes[selected]}
-      <Button text="Generate anecdote" onClick={generateAnecdote}></Button>
+      <AnecdoteInfo amount={points[selected]}></AnecdoteInfo>
+      <div>
+        <Button text="Vote" onClick={incrementVote}></Button>
+        <Button text="Generate anecdote" onClick={generateAnecdote}></Button>
+      </div>
     </div>
   )
 }
