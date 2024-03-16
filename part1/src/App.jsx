@@ -27,17 +27,17 @@ const Statistics = ({ text, good, neutral, bad }) => {
   return (
     <div>
       <Header text={text}></Header>
-      <Part text="good" total={good}></Part>
-      <Part text="neutral" total={neutral}></Part>
-      <Part text="bad" total={bad}></Part>
-      <Part text="all" total={all}></Part>
-      <Part text="average" total={average}></Part>
-      <Part text="positive" total={positive + " %"}></Part>
+      <StatisticsLine text="good" total={good}></StatisticsLine>
+      <StatisticsLine text="neutral" total={neutral}></StatisticsLine>
+      <StatisticsLine text="bad" total={bad}></StatisticsLine>
+      <StatisticsLine text="all" total={all}></StatisticsLine>
+      <StatisticsLine text="average" total={average}></StatisticsLine>
+      <StatisticsLine text="positive" total={positive + " %"}></StatisticsLine>
     </div>
   );
 };
 
-const Part = ({text, total}) => {
+const StatisticsLine = ({text, total}) => {
   console.log("Paragraph comp:", text, total)
   return(
     <div>
@@ -74,7 +74,7 @@ const hasFeedback = good + neutral + bad > 0
       <Button text="good" onClick={incrementGood}></Button>
       <Button text="neutral" onClick={incrementNeutral}></Button>
       <Button text="bad" onClick={incrementBad}></Button>
-      {hasFeedback ? <Statistics text="statistics" good={good} neutral={neutral} bad={bad}></Statistics> : <Part text="No feedback given"></Part>}
+      {hasFeedback ? <Statistics text="statistics" good={good} neutral={neutral} bad={bad}></Statistics> : <StatisticsLine text="No feedback given"></StatisticsLine>}
     </div>
   )
 }
