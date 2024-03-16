@@ -27,12 +27,16 @@ const Statistics = ({ text, good, neutral, bad }) => {
   return (
     <div>
       <Header text={text}></Header>
-      <StatisticsLine text="good" total={good}></StatisticsLine>
-      <StatisticsLine text="neutral" total={neutral}></StatisticsLine>
-      <StatisticsLine text="bad" total={bad}></StatisticsLine>
-      <StatisticsLine text="all" total={all}></StatisticsLine>
-      <StatisticsLine text="average" total={average}></StatisticsLine>
-      <StatisticsLine text="positive" total={positive + " %"}></StatisticsLine>
+      <table>
+        <tbody>
+          <StatisticsLine text="good" total={good}></StatisticsLine>
+          <StatisticsLine text="neutral" total={neutral}></StatisticsLine>
+          <StatisticsLine text="bad" total={bad}></StatisticsLine>
+          <StatisticsLine text="all" total={all}></StatisticsLine>
+          <StatisticsLine text="average" total={average}></StatisticsLine>
+          <StatisticsLine text="positive" total={positive + " %"}></StatisticsLine>
+        </tbody>
+      </table>
     </div>
   );
 };
@@ -40,9 +44,10 @@ const Statistics = ({ text, good, neutral, bad }) => {
 const StatisticsLine = ({text, total}) => {
   console.log("Paragraph comp:", text, total)
   return(
-    <div>
-      <p>{text} {total}</p>
-    </div>
+    <tr>
+      <td>{text}</td>
+      <td>{total}</td>
+    </tr>
   )
 }
 
