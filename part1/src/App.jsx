@@ -2,84 +2,40 @@ import { useState } from 'react'
 
 
 //Components.
-const Header = ({text}) => {
-  console.log("Header comp:", text)
-  return(
-    <div>
-      <h1>{text}</h1>
-    </div>
-  )
-}
-
 const Button = ({text, onClick}) => {
   console.log("Button comp:", text, onClick)
   return(
-    <button onClick={onClick}>
-      {text}
-    </button>
-  )
-}
-
-const Statistics = ({ text, good, neutral, bad }) => {
-  const all = good + neutral + bad;
-  const average = (good - bad) / all;
-  const positive = (good / all) * 100;
-  return (
-    <div>
-      <Header text={text}></Header>
-      <table>
-        <tbody>
-          <StatisticsLine text="good" total={good}></StatisticsLine>
-          <StatisticsLine text="neutral" total={neutral}></StatisticsLine>
-          <StatisticsLine text="bad" total={bad}></StatisticsLine>
-          <StatisticsLine text="all" total={all}></StatisticsLine>
-          <StatisticsLine text="average" total={average}></StatisticsLine>
-          <StatisticsLine text="positive" total={positive + " %"}></StatisticsLine>
-        </tbody>
-      </table>
-    </div>
-  );
-};
-
-const StatisticsLine = ({text, total}) => {
-  console.log("Paragraph comp:", text, total)
-  return(
-    <tr>
-      <td>{text}</td>
-      <td>{total}</td>
-    </tr>
-  )
-}
+  <div>
+    <button onClick={onClick}>{text}</button>
+  </div>
+  )}
 
 const App = () => {
-  // Save clicks of each button to its own state.
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
+  const anecdotes = [
+    'If it hurts, do it more often.',
+    'Adding manpower to a late software project makes it later!',
+    'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+    'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+    'Premature optimization is the root of all evil.',
+    'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
+    'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
+    'The only way to go fast, is to go well.'
+  ]
 
-//EventListeners.
-const incrementGood = () => {
-  setGood(good + 1)
-}
+  const [selected, setSelected] = useState(0)
 
-const incrementNeutral = () => {
-  setNeutral(neutral + 1)
-}
-
-const incrementBad = () => {
-  setBad(bad + 1)
-}
-
-//bool to check if there are any given stats.
-const hasFeedback = good + neutral + bad > 0
+  const generateAnecdote = () => {
+    let randomIndex
+    do {
+       randomIndex = Math.floor(Math.random() * anecdotes.length)
+    } while (randomIndex === selected)
+    setSelected(randomIndex)
+  }
 
   return (
     <div>
-      <Header text="give feedback"></Header>
-      <Button text="good" onClick={incrementGood}></Button>
-      <Button text="neutral" onClick={incrementNeutral}></Button>
-      <Button text="bad" onClick={incrementBad}></Button>
-      {hasFeedback ? <Statistics text="statistics" good={good} neutral={neutral} bad={bad}></Statistics> : <StatisticsLine text="No feedback given"></StatisticsLine>}
+      {anecdotes[selected]}
+      <Button text="Generate anecdote" onClick={generateAnecdote}></Button>
     </div>
   )
 }
