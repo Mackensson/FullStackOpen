@@ -2,11 +2,11 @@ import { useState } from 'react'
 
 
 //Components
-const Header = ({name}) => {
-  console.log("Header comp:", name)
+const Header = ({text}) => {
+  console.log("Header comp:", text)
   return(
     <div>
-      <h1>{name}</h1>
+      <h1>{text}</h1>
     </div>
   )
 }
@@ -20,15 +20,24 @@ const Button = ({text, onClick}) => {
   )
 }
 
-const Content = ({text, total}) => {
-  return(
+const Statistics = ({ text, good, neutral, bad }) => {
+  const all = good + neutral + bad;
+  const average = (good - bad) / all;
+  const positive = (good / all) * 100;
+  return (
     <div>
-      <Paragraph text={text} total={total}></Paragraph>
+      <Header text={text}></Header>
+      <Part text="good" total={good}></Part>
+      <Part text="neutral" total={neutral}></Part>
+      <Part text="bad" total={bad}></Part>
+      <Part text="all" total={all}></Part>
+      <Part text="average" total={average}></Part>
+      <Part text="positive" total={positive + " %"}></Part>
     </div>
-  )
-}
+  );
+};
 
-const Paragraph = ({text, total}) => {
+const Part = ({text, total}) => {
   console.log("Paragraph comp:", text, total)
   return(
     <div>
@@ -58,14 +67,11 @@ const incrementBad = () => {
 
   return (
     <div>
-      <Header name="give feedback" />
+      <Header text="give feedback"></Header>
       <Button text="good" onClick={incrementGood}></Button>
       <Button text="neutral" onClick={incrementNeutral}></Button>
       <Button text="bad" onClick={incrementBad}></Button>
-      <Header name="statistics"></Header>
-      <Content text="good" total={good}></Content>
-      <Content text="neutral" total={neutral}></Content>
-      <Content text="bad" total={bad}></Content>
+      <Statistics text="statistics" good={good} neutral={neutral} bad={bad}></Statistics>
     </div>
   )
 }
