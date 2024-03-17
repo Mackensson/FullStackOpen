@@ -55,16 +55,10 @@ const App = () => {
     ]
   }
 
-  const sumExercises = () => {
-    let amount = 0
-    course.parts.forEach(element => {
-     amount += element.exercises
-    })
-    return amount
-  }
+    const total = course.parts.reduce((s, p) => s + p.exercises, 0)
 
   return(
-    <Course course={course} total={sumExercises()}/>
+    <Course course={course} total={total}/>
   )
 }
 
