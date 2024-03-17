@@ -1,9 +1,10 @@
-const Course = ({course}) => {
-console.log("Course:", course)
+const Course = ({course, total}) => {
+console.log("Course:", course, total)
 return(
   <div>
-    <Header text={course.name}></Header>
-    <Content parts={course.parts}></Content>
+    <Header text={course.name}/>
+    <Content parts={course.parts}/>
+    <p><strong>Total of {total} exercises</strong></p>
   </div>
 )}
 
@@ -31,6 +32,7 @@ const Part = ({name, amount}) => {
   )}
 
 const App = () => {
+
   const course = {
     id: 1,
     name: 'Half Stack application development',
@@ -53,7 +55,17 @@ const App = () => {
     ]
   }
 
-  return <Course course={course} />
+  const sumExercises = () => {
+    let amount = 0
+    course.parts.forEach(element => {
+     amount += element.exercises
+    })
+    return amount
+  }
+
+  return(
+    <Course course={course} total={sumExercises()}/>
+  )
 }
 
 export default App
