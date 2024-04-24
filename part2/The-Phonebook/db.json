@@ -1,9 +1,3 @@
 {
-  "persons": [
-    {
-      "id": "fcb6",
-      "name": "John Candice",
-      "number": "5555-42412213"
-    }
-  ]
+  "persons": []
 }

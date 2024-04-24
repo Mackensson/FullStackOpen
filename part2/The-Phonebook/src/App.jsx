@@ -3,7 +3,7 @@ import Filter from "./Filter";
 import Form from "./Form";
 import personService from "./services/persons";
 
-const Persons = ({ listOfPersons }) => {
+const Persons = ({ listOfPersons, onDelete}) => {
   return (
     <div>
       <ul>
@@ -12,6 +12,7 @@ const Persons = ({ listOfPersons }) => {
             key={index}
             name={person.name}
             number={person.number}
+            onDelete={() => onDelete(person.id, person.name)}
           ></Person>
         ))}
       </ul>
@@ -19,11 +20,12 @@ const Persons = ({ listOfPersons }) => {
   );
 };
 
-const Person = ({ id, name, number }) => {
+const Person = ({ id, name, number, onDelete }) => {
   return (
     <div>
       <li key={id}>
         {name} {number}
+        <button onClick={onDelete}>delete</button>
       </li>
     </div>
   );
@@ -50,6 +52,12 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    if (!newName || !newNumber) {
+      window.alert("Please enter both name and number");
+      return;
+    }
+
     if (
       persons.some((p) => p.name.toLowerCase() === newName.toLowerCase()) &&
       persons.some((p) => p.number === newNumber)
@@ -65,10 +73,24 @@ const App = () => {
         personService
         .create(personObject)
         .then(jsonData => {
-          console.log(jsonData);
+          console.log(jsonData, "Added");
           setPersons([...persons, jsonData]);
         })
+        setNewName("")
+        setNewNumber("")
     }};
+
+    const onDelete = (id, name) => {
+      if (window.confirm(`Delete ${name}?`)) {
+        personService
+          .remove(id)
+          .then(jsonData => {
+            console.log(jsonData, "Removed");
+            const updatedPersons = persons.filter((person) => person.id !== id);
+            setPersons(updatedPersons);
+          })
+      }
+    }
 
   const inputChangeName = (event) => {
     setNewName(event.target.value);
@@ -99,7 +121,7 @@ const App = () => {
         onSubmit={handleSubmit}
       ></Form>
       <h2>Numbers</h2>
-      <Persons listOfPersons={filteredPersons}></Persons>
+      <Persons listOfPersons={filteredPersons} onDelete={onDelete}></Persons>
     </div>
   );
 };
