@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Filter from "./Filter";
 import Form from "./Form";
+import personService from "./services/persons";
 
 const Persons = ({ listOfPersons }) => {
   return (
@@ -36,13 +36,13 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    console.log("effect");
-    axios.get("http://localhost:3001/persons").then((response) => {
-      console.log("promise fulfilled");
-      setPersons(response.data);
-    });
-  }, []);
-  console.log("render", persons.length, "notes");
+    personService
+    .getAll()
+    .then(jsonData => {
+      console.log(jsonData)
+      setPersons(jsonData)
+    })
+  },[]);
 
   const filteredPersons = persons.filter((person) =>
     person.name.toLowerCase().includes(filter.toLowerCase())
@@ -58,11 +58,17 @@ const App = () => {
         `${newName} with number ${newNumber} is already added to the phonebook`
       );
     } else {
-      setPersons([...persons, { name: newName, number: newNumber }]);
-      setNewName("");
-      setNewNumber("");
-    }
-  };
+      const personObject = {
+        name: newName,
+        number: newNumber
+      }
+        personService
+        .create(personObject)
+        .then(jsonData => {
+          console.log(jsonData);
+          setPersons([...persons, jsonData]);
+        })
+    }};
 
   const inputChangeName = (event) => {
     setNewName(event.target.value);
