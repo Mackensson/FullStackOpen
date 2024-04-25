@@ -1,35 +1,8 @@
 import { useState, useEffect } from "react";
 import Filter from "./Filter";
 import Form from "./Form";
+import Persons from "./Persons";
 import personService from "./services/persons";
-
-const Persons = ({ listOfPersons, onDelete}) => {
-  return (
-    <div>
-      <ul>
-        {listOfPersons.map((person, index) => (
-          <Person
-            key={index}
-            name={person.name}
-            number={person.number}
-            onDelete={() => onDelete(person.id, person.name)}
-          ></Person>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-const Person = ({ id, name, number, onDelete }) => {
-  return (
-    <div>
-      <li key={id}>
-        {name} {number}
-        <button onClick={onDelete}>delete</button>
-      </li>
-    </div>
-  );
-};
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -38,13 +11,11 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    personService
-    .getAll()
-    .then(jsonData => {
-      console.log(jsonData)
-      setPersons(jsonData)
-    })
-  },[]);
+    personService.getAll().then((jsonData) => {
+      console.log(jsonData);
+      setPersons(jsonData);
+    });
+  }, []);
 
   const filteredPersons = persons.filter((person) =>
     person.name.toLowerCase().includes(filter.toLowerCase())
@@ -53,44 +24,69 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    // If no data was provided.
     if (!newName || !newNumber) {
+      console.log("No data was provided.");
       window.alert("Please enter both name and number");
       return;
     }
 
+    // If user tries to add duplicate data.
     if (
       persons.some((p) => p.name.toLowerCase() === newName.toLowerCase()) &&
       persons.some((p) => p.number === newNumber)
     ) {
+      console.log("Duplicate data was found.");
       window.alert(
         `${newName} with number ${newNumber} is already added to the phonebook`
       );
-    } else {
-      const personObject = {
-        name: newName,
-        number: newNumber
-      }
-        personService
-        .create(personObject)
-        .then(jsonData => {
-          console.log(jsonData, "Added");
-          setPersons([...persons, jsonData]);
-        })
-        setNewName("")
-        setNewNumber("")
-    }};
+      return;
+    }
 
-    const onDelete = (id, name) => {
-      if (window.confirm(`Delete ${name}?`)) {
-        personService
-          .remove(id)
-          .then(jsonData => {
-            console.log(jsonData, "Removed");
-            const updatedPersons = persons.filter((person) => person.id !== id);
-            setPersons(updatedPersons);
-          })
+    // If user wants to update a number of a person.
+    if (persons.some((p) => p.name.toLowerCase() === newName.toLowerCase())) {
+      if (
+        window.confirm(
+          `${newName} is already added to the phonebook, replace the old number with a new one?`
+        )
+      ) {
+        const person = persons.find((p) => p.name === newName);
+        const updatedPerson = {
+          id: person.id,
+          name: newName,
+          number: newNumber,
+        };
+        personService.update(person.id, updatedPerson).then((jsonData) => {
+          console.log(jsonData, "Updated");
+          const updatedPersons = persons.filter((p) => p.id !== person.id);
+          setPersons([...updatedPersons, jsonData]);
+        });
       }
     }
+    // Creating new entry.
+    else {
+      const personObject = {
+        name: newName,
+        number: newNumber,
+      };
+      personService.create(personObject).then((jsonData) => {
+        console.log(jsonData, "Added");
+        setPersons([...persons, jsonData]);
+      });
+      setNewName("");
+      setNewNumber("");
+    }
+  };
+
+  const onDelete = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      personService.remove(id).then((jsonData) => {
+        console.log(jsonData, "Removed");
+        const updatedPersons = persons.filter((p) => p.id !== id);
+        setPersons(updatedPersons);
+      });
+    }
+  };
 
   const inputChangeName = (event) => {
     setNewName(event.target.value);
