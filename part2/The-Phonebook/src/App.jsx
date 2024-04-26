@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
+import personService from "./services/persons";
 import Filter from "./Filter";
 import Form from "./Form";
 import Persons from "./Persons";
-import personService from "./services/persons";
+import Notification from "./Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newNumber, setNewNumber] = useState("");
   const [newName, setNewName] = useState("");
   const [filter, setFilter] = useState("");
+  const [notification, setMessage] = useState("");
 
   useEffect(() => {
     personService.getAll().then((jsonData) => {
@@ -50,7 +52,7 @@ const App = () => {
           `${newName} is already added to the phonebook, replace the old number with a new one?`
         )
       ) {
-        const person = persons.find((p) => p.name === newName);
+        const person = persons.find((p) => p.name.toLowerCase() === newName.toLowerCase());
         const updatedPerson = {
           id: person.id,
           name: newName,
@@ -60,6 +62,9 @@ const App = () => {
           console.log(jsonData, "Updated");
           const updatedPersons = persons.filter((p) => p.id !== person.id);
           setPersons([...updatedPersons, jsonData]);
+          setNewName("");
+          setNewNumber("");
+          setMessage(`Updated ${updatedPerson.name}`)
         });
       }
     }
@@ -75,6 +80,7 @@ const App = () => {
       });
       setNewName("");
       setNewNumber("");
+      setMessage(`Added ${personObject.name}`);
     }
   };
 
@@ -103,6 +109,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} setMessage={setMessage}></Notification>
       <Filter
         text="Filter shown with: "
         inputValue={filter}
