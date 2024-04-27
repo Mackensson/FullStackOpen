@@ -72,12 +72,21 @@ const App = () => {
           name: newName,
           number: newNumber,
         };
-        personService.update(person.id, updatedPerson).then((jsonData) => {
-          console.log(jsonData, "Updated");
-          const updatedPersons = persons.filter((p) => p.id !== person.id);
-          setPersons([...updatedPersons, jsonData]);
-        });
-        setMessage(`Success: Updated ${newName} with new number ${newNumber}`);
+        const updatedPersons = persons.filter((p) => p.id !== person.id);
+        personService
+          .update(person.id, updatedPerson)
+          .then((jsonData) => {
+            console.log(jsonData, "Updated");
+            setPersons([...updatedPersons, jsonData]);
+            setMessage(
+              `Success: Updated ${newName} with new number ${newNumber}`
+            );
+          })
+          .catch((error) => {
+            console.log(error);
+            setMessage(`Error:${newName} was already removed from the server.`);
+            setPersons([...updatedPersons]);
+          });
         setNewName("");
         setNewNumber("");
       }
@@ -91,8 +100,8 @@ const App = () => {
       personService.create(personObject).then((jsonData) => {
         console.log(jsonData, "Added");
         setPersons([...persons, jsonData]);
+        setMessage(`Success: Added ${newName} with number ${newNumber}`);
       });
-      setMessage(`Success: Added ${newName} with number ${newNumber}`);
       setNewName("");
       setNewNumber("");
     }
@@ -100,12 +109,19 @@ const App = () => {
 
   const onDelete = (id, name) => {
     if (window.confirm(`Delete ${name}?`)) {
-      personService.remove(id).then((jsonData) => {
-        console.log(jsonData, "Removed");
-        const updatedPersons = persons.filter((p) => p.id !== id);
-        setPersons(updatedPersons);
-        setMessage(`Success:${name} was removed from the phonebook`);
-      });
+      const updatedPersons = persons.filter((p) => p.id !== id);
+      personService
+        .remove(id)
+        .then((jsonData) => {
+          console.log(jsonData, "Removed");
+          setPersons(updatedPersons);
+          setMessage(`Success:${name} was removed from the phonebook`);
+        })
+        .catch((error) => {
+          console.log(error);
+          setMessage(`Error:${name} was already removed from the server.`);
+          setPersons([...updatedPersons]);
+        });
     }
   };
 
