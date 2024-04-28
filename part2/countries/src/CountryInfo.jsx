@@ -1,5 +1,5 @@
 const CountryInfo = ({ country }) => {
-  console.log(country);
+  console.log("Country:", country);
   return (
     <div>
       <h1>{country.name.common}</h1>
@@ -7,7 +7,7 @@ const CountryInfo = ({ country }) => {
       <p>Area: {country.area}</p>
       <h4>Languages:</h4>
       <Languages listofLanguages={country.languages}></Languages>
-      <image style={{ fontSize: 250 }}>{country.flag}</image>
+      <image style={{ fontSize: 250}}>{country.flag}</image>
     </div>
   );
 };
@@ -15,8 +15,8 @@ const CountryInfo = ({ country }) => {
 const Capital = ({ listOfCapitals }) => {
   console.log("Capitals:", listOfCapitals);
   return (
-    <div style={{display: "flex"}}>
-      <p style={{marginRight: 2}}>Capital: </p>
+    <div style={{ display: "flex" }}>
+      <p style={{ marginRight: 2 }}>Capital: </p>
       {listOfCapitals.map((capital) => (
         <p key={capital}>{capital}</p>
       ))}
