@@ -14,7 +14,6 @@ const App = () => {
 
   useEffect(() => {
     personService.getAll().then((jsonData) => {
-      console.log(jsonData);
       setPersons(jsonData);
     });
   }, []);
