@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import countiresAPI from "./services/countriesAPI";
+import weatherAPI from "./services/weatherAPI";
 import SearchBar from "./SearchBar";
 import CountryInfo from "./CountryInfo";
 import CountryList from "./CountryList";
@@ -29,6 +30,14 @@ const App = () => {
     });
   };
 
+  const getWeather = (lat, lon) => {
+    return weatherAPI.getWeather(lat, lon);
+  };
+
+  const getWeatherIcon = (code) => {
+    return weatherAPI.getWeatherIcon(code);
+  };
+
   const renderView = () => {
     switch (true) {
       case newSearch.trim() === "":
@@ -38,7 +47,13 @@ const App = () => {
       case filteredCountries.length > 10:
         return <p>Too many countries, please specify.</p>;
       case filteredCountries.length === 1:
-        return <CountryInfo country={filteredCountries[0]} />;
+        return (
+          <CountryInfo
+            country={filteredCountries[0]}
+            getWeatherFunc={getWeather}
+            getWeatherIconFunc={getWeatherIcon}
+          />
+        );
       case filteredCountries.length > 1 && filteredCountries.length <= 10:
         return (
           <CountryList
